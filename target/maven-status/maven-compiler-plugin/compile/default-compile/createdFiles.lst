@@ -1,0 +1,7 @@
+com\domain\portal\security\CustomLogoutSuccessHandler.class
+com\domain\portal\config\AppInitializer.class
+com\domain\portal\config\SecurityConfig.class
+com\domain\portal\controller\FirstController.class
+com\domain\portal\security\CustomLoginSuccessHandler.class
+com\domain\portal\config\HibernateConfig.class
+com\domain\portal\config\AppConfig.class
