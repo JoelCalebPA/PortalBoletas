@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -31,8 +32,7 @@ public class UserDaoImp implements UserDao {
 	
 	@Override
 	public User find(String email) {
-		@SuppressWarnings("unchecked")
-		TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("from User where email=:email");
+		Query<User> query = sessionFactory.getCurrentSession().createNamedQuery("from user where email=  :email", User.class);
 		return query.getSingleResult();
 	}
    

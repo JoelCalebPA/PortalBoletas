@@ -23,6 +23,7 @@ package com.domain.portal.security;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +37,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import com.domain.portal.entity.Role;
 import com.domain.portal.entity.User;
 import com.domain.portal.service.UserService;
-import com.openkm.sdk4j.OKMWebservices;
 
 /**
  * Implements method from AuthenticationProvider in order to capture and store the password from spring-security
@@ -56,6 +57,7 @@ import com.openkm.sdk4j.OKMWebservices;
  */
 @Service
 public class CustomAuthenticationProvider implements AuthenticationProvider {
+	
 	private static final Logger log = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
 
 	@Autowired
@@ -67,15 +69,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		String password = (String) authentication.getCredentials();
 
 		try {
-			
-			User user = userService.find(username);
+			User userLog = userService.find(username);
 
 			// set roles for spring-security according to those received from OKM ws response
 			List<GrantedAuthority> authorities = new ArrayList<>();
-			List<String> roles = ws.getRolesByUser(username);
+			List<Role> roles = userLog.getRoles().stream().collect(Collectors.toList());
 
-			for (String role : roles) {
-				authorities.add(new SimpleGrantedAuthority(role));
+			for (Role role : roles) {
+				authorities.add(new SimpleGrantedAuthority(role.getRole()));
 			}
 
 			log.info("Loaded authorities for user: " + authorities);

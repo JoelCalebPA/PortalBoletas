@@ -24,22 +24,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private CustomAuthenticationProvider customAuthenticationProvider;
+	
 	@Autowired
 	private CustomLoginSuccessHandler customLoginSuccessHandler;
 
 	@Autowired
 	private CustomLogoutSuccessHandler customLogoutSuccessHandler;
 	
-	@Autowired
-	private LocalSessionFactoryBean sessionFactoryBean;
 
-	private String usersQuery = "select email, password, active from user where email=?";
-
-	private String rolesQuery = "select u.email, r.role from user u inner join user_role ur on(u.user_id=ur.user_id) inner join role r on(ur.role_id=r.role_id) where u.email=?";
-	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authenticationProvider)jdbcAuthentication().usersByUsernameQuery(usersQuery).authoritiesByUsernameQuery(rolesQuery)
+		auth.authenticationProvider(customAuthenticationProvider).usersByUsernameQuery(usersQuery).authoritiesByUsernameQuery(rolesQuery)
 			.dataSource(sessionFactoryBean).passwordEncoder(passwordEncoder());
 	}
 
